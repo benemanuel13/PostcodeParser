@@ -10,7 +10,7 @@ namespace PostcodeParser
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("POSTCODE: ");
+            Console.Write("Enter POSTCODE: ");
             string postcode = Console.ReadLine();
 
             postcode = postcode.ToUpper().Replace(" ", "");
@@ -34,6 +34,7 @@ namespace PostcodeParser
 
             string outwardNumber = outward.Substring(pos, outward.Length - pos);
 
+            Console.WriteLine("#POSTCODE: " + postcode);
             Console.WriteLine("\tOUTWARD CODE: " + outward);
             Console.WriteLine("\t\tOUTWARD LETTER: " + outwardLetter);
             Console.WriteLine("\t\tOUTWARD NUMBER: " + outwardNumber);
