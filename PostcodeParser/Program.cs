@@ -17,10 +17,9 @@ namespace PostcodeParser
             string[] expectedNumber = new string[] { "28", "2H", "21", "3" };
             string[] expectedInward = new string[] { "7JP", "7DE", "4LR", "3DP" };
 
-
             for (int i = 0; i < 4; i++)
             {
-                bool passed = ParsePostcode(postcodes[i], expectedPostcodes[i], expectedOutward[i], expectedLetter[i], expectedNumber[i], expectedInward[i]);
+                bool passed = DoTest(postcodes[i], expectedPostcodes[i], expectedOutward[i], expectedLetter[i], expectedNumber[i], expectedInward[i]);
 
                 if (passed)
                 {
@@ -37,36 +36,11 @@ namespace PostcodeParser
             Console.ReadLine();
         }
 
-        static bool ParsePostcode(string postcode, string expectedPostcode, string expectedOutward, string expectedLetter, string expectedNumber, string expectedInward)
+        static bool DoTest(string postcode, string expectedPostcode, string expectedOutward, string expectedLetter, string expectedNumber, string expectedInward)
         {
-            postcode = postcode.ToUpper().Replace(" ", "");
+            ParsePostcode(postcode, out string newPostcode, out string outward, out string outwardLetter, out string outwardNumber, out string inward);
 
-            string inward = postcode.Substring(postcode.Length - 3, 3);
-            string outward = postcode.Substring(0, postcode.Length - 3);
-
-            StringBuilder outwardLetter = new StringBuilder();
-
-            int pos = 0;
-            foreach (char chr in outward.ToCharArray())
-            {
-                if ((int)chr > 64 && (int)chr < 91)
-                {
-                    outwardLetter.Append(chr);
-                    pos++;
-                }
-                else
-                    break;
-            }
-
-            string outwardNumber = outward.Substring(pos, outward.Length - pos);
-
-            Console.WriteLine("#POSTCODE: " + postcode);
-            Console.WriteLine("\tOUTWARD CODE: " + outward);
-            Console.WriteLine("\t\tOUTWARD LETTER: " + outwardLetter);
-            Console.WriteLine("\t\tOUTWARD NUMBER: " + outwardNumber);
-            Console.WriteLine("\tINWARD CODE: " + inward);
-
-            if (postcode != expectedPostcode)
+            if (newPostcode != expectedPostcode)
                 return false;
 
             if (outward != expectedOutward)
@@ -82,6 +56,38 @@ namespace PostcodeParser
                 return false;
 
             return true;
+        }
+
+        //This is fully self contained
+        static void ParsePostcode(string postcode, out string newPostcode, out string outward, out string letter, out string number, out string inward)
+        {
+            newPostcode = postcode.ToUpper().Replace(" ", "");
+
+            inward = newPostcode.Substring(newPostcode.Length - 3, 3);
+            outward = newPostcode.Substring(0, newPostcode.Length - 3);
+
+            StringBuilder outwardLetterBuilder = new StringBuilder();
+
+            int pos = 0;
+            foreach (char chr in outward.ToCharArray())
+            {
+                if ((int)chr > 64 && (int)chr < 91)
+                {
+                    outwardLetterBuilder.Append(chr);
+                    pos++;
+                }
+                else
+                    break;
+            }
+
+            letter = outwardLetterBuilder.ToString();
+            number = outward.Substring(pos, outward.Length - pos);
+
+            Console.WriteLine("#POSTCODE: " + postcode);
+            Console.WriteLine("\tOUTWARD CODE: " + outward);
+            Console.WriteLine("\t\tOUTWARD LETTER: " + letter);
+            Console.WriteLine("\t\tOUTWARD NUMBER: " + number);
+            Console.WriteLine("\tINWARD CODE: " + inward);
         }
     }
 }
