@@ -10,9 +10,35 @@ namespace PostcodeParser
     {
         static void Main(string[] args)
         {
-            Console.Write("Enter POSTCODE: ");
-            string postcode = Console.ReadLine();
+            string[] postcodes = new string[] { "M28 7JP", "wc2h7de", "CT21      4LR", "N33DP" };
+            string[] expectedPostcodes = new string[] { "M287JP", "WC2H7DE", "CT214LR", "N33DP" };
+            string[] expectedOutward = new string[] { "M28", "WC2H", "CT21", "N3" };
+            string[] expectedLetter = new string[] { "M", "WC", "CT", "N" };
+            string[] expectedNumber = new string[] { "28", "2H", "21", "3" };
+            string[] expectedInward = new string[] { "7JP", "7DE", "4LR", "3DP" };
 
+
+            for (int i = 0; i < 4; i++)
+            {
+                bool passed = ParsePostcode(postcodes[i], expectedPostcodes[i], expectedOutward[i], expectedLetter[i], expectedNumber[i], expectedInward[i]);
+
+                if (passed)
+                {
+                    Console.WriteLine("PASSED TEST");
+                }
+                else
+                {
+                    Console.WriteLine("FAILED TEST");
+                }
+
+                Console.WriteLine();
+            }
+
+            Console.ReadLine();
+        }
+
+        static bool ParsePostcode(string postcode, string expectedPostcode, string expectedOutward, string expectedLetter, string expectedNumber, string expectedInward)
+        {
             postcode = postcode.ToUpper().Replace(" ", "");
 
             string inward = postcode.Substring(postcode.Length - 3, 3);
@@ -21,7 +47,7 @@ namespace PostcodeParser
             StringBuilder outwardLetter = new StringBuilder();
 
             int pos = 0;
-            foreach(char chr in outward.ToCharArray())
+            foreach (char chr in outward.ToCharArray())
             {
                 if ((int)chr > 64 && (int)chr < 91)
                 {
@@ -40,7 +66,22 @@ namespace PostcodeParser
             Console.WriteLine("\t\tOUTWARD NUMBER: " + outwardNumber);
             Console.WriteLine("\tINWARD CODE: " + inward);
 
-            Console.ReadLine();
+            if (postcode != expectedPostcode)
+                return false;
+
+            if (outward != expectedOutward)
+                return false;
+
+            if (outwardLetter.ToString() != expectedLetter)
+                return false;
+
+            if (outwardNumber != expectedNumber)
+                return false;
+
+            if (inward != expectedInward)
+                return false;
+
+            return true;
         }
     }
 }
