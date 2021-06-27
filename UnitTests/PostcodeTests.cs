@@ -26,6 +26,7 @@ namespace UnitTests
 
             Assert.AreEqual(newPostcode, expectedPostcode);
             Assert.AreEqual(outward, expectedOutward);
+            Assert.AreEqual(outwardNumber, expectedNumber);
             Assert.AreEqual(outwardLetter, expectedLetter);
             Assert.AreEqual(inward, expectedInward);
         }
